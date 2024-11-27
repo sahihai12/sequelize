@@ -1,0 +1,76 @@
+sequelize is a promise based nodejs ORM
+Orm is programming technique to write db querries in an object oriented way using prefered programming language 
+
+
+
+create a connection 
+const sequelize = new Sequelize {}
+sequelize.authenticate().then().catch()
+
+
+// creating a model
+
+const User = sequelize.define('user' , {
+    name: {
+        type : Sequelize.DataTypes.String
+    }
+} , {
+    // second option is optional 
+    freezeTableName : true // means not the table actual name
+})
+
+User.sync().then(
+    // write create querry
+).catch()
+sync(options)
+sync({force : true }) // create the table drops it first if already exits 
+sync({alter : true }) // create the current state of db and then perform necessary changes
+
+
+// bulkCreate
+
+// find method 
+findByPK
+findOne
+findAll
+findOrCreate
+findAndCountAll  
+
+ 
+get and set 
+const User = sequelize.define('user' , {
+    name: {
+        type : Sequelize.DataTypes.String,
+        set(value) {
+            const hash = bcrypt.hashSync(value, bcrypt.genSaltSync(12))
+            this.setDataValue('password' , hash)
+        }
+    }
+})
+
+
+
+// custom validate functions 
+const User = sequelize.define('user' , {
+    name: {
+        type : Sequelize.DataTypes.String,
+        validate : {
+            isOld(value) {
+                if(value < 21){
+                    throw new Error('Too Young');
+                }
+            }
+        }
+    } 
+})
+
+
+// raw queries 
+User.sync().then(
+    // write create query
+   return sequelize.query('SELECT * FROM tab')
+).then((data) => {
+    [result , metaData] = data
+}
+).catch()
+
